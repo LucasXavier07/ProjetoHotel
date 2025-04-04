@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Reservas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">Sistema de Reservas</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/reservas">Reservas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/reservas/nova">Nova Reserva</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Lista de Reservas</h2>
+                
+                <!-- Mensagens de Feedback -->
+                <div th:if="${mensagem}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <span th:text="${mensagem}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${erro}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <a href="/reservas/nova" class="btn btn-primary mb-3">Nova Reserva</a>
+                
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Quarto</th>
+                                <th>Data Entrada</th>
+                                <th>Data Saída</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="reserva : ${reservas}">
+                                <td th:text="${reserva.id}"></td>
+                                <td th:text="${reserva.cliente}"></td>
+                                <td th:text="${reserva.quarto}"></td>
+                                <td th:text="${#temporals.format(reserva.dataEntrada, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${#temporals.format(reserva.dataSaida, 'dd/MM/yyyy')}"></td>
+                                <td>
+                                    <span th:class="${reserva.status == 'CONFIRMADA' ? 'badge bg-success' : 
+                                                    reserva.status == 'PENDENTE' ? 'badge bg-warning' : 
+                                                    'badge bg-danger'}"
+                                          th:text="${reserva.status}">
+                                    </span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/reservas/editar/{id}(id=${reserva.id})}" 
+                                       class="btn btn-sm btn-warning">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+                                    <a th:href="@{/reservas/excluir/{id}(id=${reserva.id})}" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Tem certeza que deseja excluir esta reserva?')">
+                                        <i class="bi bi-trash"></i> Excluir
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
